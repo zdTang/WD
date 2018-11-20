@@ -13,7 +13,11 @@ namespace myOwnWebServer
             
             if(ParseCommandLine.CheckCommandLine())
             {
-                Console.WriteLine("OK");
+                Server myServer = new Server();
+
+                Console.WriteLine(myServer.Path);
+                Console.WriteLine(myServer.IP);
+                Console.WriteLine(myServer.Port);
                 Console.WriteLine("PUT CODE HERE");
                 Console.ReadKey();
             }

@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace myOwnWebServer
 {
-    class ParseCommandLine
+    public class ParseCommandLine
     {
+        public static string IpInput = string.Empty;
+        public static string PathInput = string.Empty;
+        public static string PortInput = string.Empty;
+
 
         public static bool CheckCommandLine()
         {
+            
             bool isCommandLineOK = false;
             String[] args = Environment.GetCommandLineArgs();
             // if the number of arguments less 4 or the formt is not correct
@@ -36,9 +41,10 @@ namespace myOwnWebServer
             else// here means the command line is good, 
             {
                 /*     put code here     */
-                Console.WriteLine(args[1]);
-                Console.WriteLine(args[2]);
-                Console.WriteLine(args[3]);
+                //Path=
+                PathInput=args[1];
+                IpInput=args[2];
+                PortInput=args[3];
                 isCommandLineOK = true;
 
             }
