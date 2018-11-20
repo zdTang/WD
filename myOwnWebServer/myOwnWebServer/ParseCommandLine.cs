@@ -41,7 +41,7 @@ namespace myOwnWebServer
             else// here means the command line is good, 
             {
                 /*     put code here     */
-                //Path=
+                // need some Validation for PATH,IP,PORT
                 PathInput=args[1];
                 IpInput=args[2];
                 PortInput=args[3];

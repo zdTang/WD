@@ -14,6 +14,7 @@ namespace myOwnWebServer
             if(ParseCommandLine.CheckCommandLine())
             {
                 Server myServer = new Server();
+                myServer.ServerStart();
 
                 Console.WriteLine(myServer.Path);
                 Console.WriteLine(myServer.IP);
