@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace myOwnWebServer
 {
-    class HttpResponse
+    class HttpReque
     {
+        public string Method pre
+        public HttpRequest(string strRequest)
+        {
 
 
-        public 
-
-
+        }
     }
 }
