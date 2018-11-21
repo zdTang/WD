@@ -90,9 +90,26 @@ namespace myOwnWebServer
         /// deal with the requeat
         /// </summary>
         /// <param name="request"></param>
-        public void ProcessRequest(string request, Socket socket)
+        public void ProcessRequest(string requestStr, Socket socket)
         {
+            //把请求行取出来
+            //初始化请求信息，和响应信息实例
+            HttpContext context = new HttpContext(requestStr);
+            HttpApplication application = new HttpApplication();
 
+            //这时候 请求的响应已经做好了
+            //正在的处理HTTP请求
+            application.ProcessRequest(context);
+
+
+            //context response 
+            //发送头部
+            socket.Send(context.Response.GetHeader());
+            //发送响应体
+            socket.Send(context.Response.BodyData);
+
+            socket.Shutdown(SocketShutdown.Both);
+            socket.Close();
         }
 
 

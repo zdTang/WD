@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace myOwnWebServer
 {
-    class HttpContext
+    public class HttpContext
     {
+        public HttpRequest Request { get; set; }
+        public HttpResponse Response { get; set; }
+
+        /// <summary>
+        /// constructor of HttpContext
+        /// </summary>
+        /// <param name="httpRequestStr"></param>
+        public HttpContext(string httpRequestStr)
+        {
+            Request = new HttpRequest(httpRequestStr);
+            Response = new HttpResponse(Request);
+        }
     }
 }
