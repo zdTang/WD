@@ -39,14 +39,15 @@ namespace myOwnWebServer
                                         //Thread theListen = new Thread(Listen);    // Listen is a method for listening
                                         //theListen.IsBackground = true;
                                         //theListen.Start(socketWatch);
-                Socket socketAgent = socketWatch.Accept();
-                byte[] byteBuffer = new byte[1024 * 1024];
+                while(true)
+                {
+                    Socket socketAgent = socketWatch.Accept();
+                    Thread threadAgent = new Thread(Agent);
+                    threadAgent.IsBackground = true;
+                    threadAgent.Start(socketAgent);
+                }
 
-                int numOfReceive = socketAgent.Receive(byteBuffer);
-                // Read Request and store it into strRequest
-                string strRequest = Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
-                Console.WriteLine(strRequest);
-                Console.ReadKey();
+                
 
             }
             catch
@@ -80,27 +81,29 @@ namespace myOwnWebServer
         //    }
 
         //}
-        
+
         /// <summary>
         /// this Method deal with Client
         /// </summary>
         /// <param name="o"></param>
-        //void Agent(object o)
-        //{
-        //    Socket socketAgent = o as Socket;
-        //    //HttpApplication httpApplication = new HttpApplication(socketAgent);
+        void Agent(object o)
+        {
+            Socket socketAgent = o as Socket;
+            //HttpApplication httpApplication = new HttpApplication(socketAgent);
 
 
-        //    byte[] byteBuffer = new byte[1024 * 1024];
-            
-        //    int numOfReceive=socketAgent.Receive(byteBuffer);
-        //    // Read Request and store it into strRequest
-        //    string strRequest=Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
-        //    Console.WriteLine(strRequest);
-        //    Console.ReadKey();
-        //    ServerRun(strRequest, socketAgent);
+            byte[] byteBuffer = new byte[1024 * 1024];
 
-        //}
+            int numOfReceive = socketAgent.Receive(byteBuffer);
+            // Read Request and store it into strRequest
+            string strRequest = Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
+            Console.WriteLine(strRequest);
+            socketAgent.Close();
+            //Console.ReadKey();
+            //ServerRun(strRequest, socketAgent);
+
+
+        }
 
         /// <summary>
         /// deal with the requeat
