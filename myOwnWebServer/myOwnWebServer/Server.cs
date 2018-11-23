@@ -23,8 +23,7 @@ namespace myOwnWebServer
             this.Path = ParseCommandLine.PathInput;
             this.IP = ParseCommandLine.IpInput;
             this.Port = ParseCommandLine.PortInput;
-            
-
+ 
         }
 
 
@@ -32,14 +31,23 @@ namespace myOwnWebServer
         {
             try
             {
-                IPAddress ipAddress = IPAddress.Parse(this.IP);
-                IPEndPoint endPoint = new IPEndPoint(ipAddress, int.Parse(this.Port));
-                Socket socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socketWatch.Bind(endPoint);
+                IPAddress ipAddress = IPAddress.Parse(this.IP);  // IP address
+                IPEndPoint endPoint = new IPEndPoint(ipAddress, int.Parse(this.Port)); // Port to listen
+                Socket socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // Create a Socket
+                socketWatch.Bind(endPoint); // Socket bind a IP and Port
                 socketWatch.Listen(1);  //  only support one Client
-                Thread theListen = new Thread(Listen);    // Listen is a method for listening
-                theListen.IsBackground = true;
-                theListen.Start(socketWatch);
+                                        //Thread theListen = new Thread(Listen);    // Listen is a method for listening
+                                        //theListen.IsBackground = true;
+                                        //theListen.Start(socketWatch);
+                Socket socketAgent = socketWatch.Accept();
+                byte[] byteBuffer = new byte[1024 * 1024];
+
+                int numOfReceive = socketAgent.Receive(byteBuffer);
+                // Read Request and store it into strRequest
+                string strRequest = Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
+                Console.WriteLine(strRequest);
+                Console.ReadKey();
+
             }
             catch
             {
@@ -52,60 +60,62 @@ namespace myOwnWebServer
         /// this thread keep on listening
         /// </summary>
         /// <param name="o"></param>
-        void Listen(object o)
-        {
-            Socket socketWatch = o as Socket;
-            while(true)
-            {
-                try
-                {
-                    // once CLIENT connected, create another socketAgent to deal with
-                    Socket socketAgent = socketWatch.Accept();
-                    Thread threadAgent = new Thread(Agent);
-                    threadAgent.IsBackground = true;
-                    threadAgent.Start(socketAgent);
-                }
-                catch
-                {
-                    Console.WriteLine("Create Agent Socket ERROR");
-                }   
-            }                     
-        }
+        //void Listen(object o)
+        //{
+        //    Socket socketWatch = o as Socket;
+        //    while (true)
+        //    {
+        //        try
+        //        {
+        //            // once CLIENT connected, create another socketAgent to deal with
+        //            Socket socketAgent = socketWatch.Accept();
+        //            Thread threadAgent = new Thread(Agent);
+        //            threadAgent.IsBackground = true;
+        //            threadAgent.Start(socketAgent);
+        //        }
+        //        catch
+        //        {
+        //            Console.WriteLine("Create Agent Socket ERROR");
+        //        }
+        //    }
+
+        //}
+        
         /// <summary>
         /// this Method deal with Client
         /// </summary>
         /// <param name="o"></param>
-        void Agent(object o)
-        {
-            byte[] byteBuffer = new byte[1024 * 1024];
-            Socket socketAgent = o as Socket;
-            int numOfReceive=socketAgent.Receive(byteBuffer);
-            // Read Request and store it into strRequest
-            string strRequest=Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
-            ProcessRequest(strRequest, socketAgent);
+        //void Agent(object o)
+        //{
+        //    Socket socketAgent = o as Socket;
+        //    //HttpApplication httpApplication = new HttpApplication(socketAgent);
 
-        }
+
+        //    byte[] byteBuffer = new byte[1024 * 1024];
+            
+        //    int numOfReceive=socketAgent.Receive(byteBuffer);
+        //    // Read Request and store it into strRequest
+        //    string strRequest=Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
+        //    Console.WriteLine(strRequest);
+        //    Console.ReadKey();
+        //    ServerRun(strRequest, socketAgent);
+
+        //}
 
         /// <summary>
         /// deal with the requeat
         /// </summary>
         /// <param name="request"></param>
-        public void ProcessRequest(string requestStr, Socket socket)
+        public void ServerRun(string strRequest, Socket socket)
         {
-            //把请求行取出来
-            //初始化请求信息，和响应信息实例
-            HttpContext context = new HttpContext(requestStr);
+
+            HttpContext context = new HttpContext(strRequest);
             HttpApplication application = new HttpApplication();
 
-            //这时候 请求的响应已经做好了
-            //正在的处理HTTP请求
             application.ProcessRequest(context);
 
-
-            //context response 
-            //发送头部
             socket.Send(context.Response.GetHeader());
-            //发送响应体
+
             socket.Send(context.Response.BodyData);
 
             socket.Shutdown(SocketShutdown.Both);

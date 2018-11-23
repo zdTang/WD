@@ -14,10 +14,10 @@ namespace myOwnWebServer
         /// <summary>
         /// constructor of HttpContext
         /// </summary>
-        /// <param name="httpRequestStr"></param>
-        public HttpContext(string httpRequestStr)
+        /// <param name="strRequest"></param>
+        public HttpContext(string strRequest)
         {
-            Request = new HttpRequest(httpRequestStr);
+            Request = new HttpRequest(strRequest);
             Response = new HttpResponse(Request);
         }
     }
