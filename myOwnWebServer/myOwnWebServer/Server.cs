@@ -14,6 +14,7 @@ namespace myOwnWebServer
     /// </summary>
     class Server
     {
+        static bool isRun = true;
         public string Path { get; set; }
         public string IP { get; set; }
         public string Port { get; set; }
@@ -29,6 +30,7 @@ namespace myOwnWebServer
 
         public void ServerStart()
         {
+           
             try
             {
                 IPAddress ipAddress = IPAddress.Parse(this.IP);  // IP address
@@ -39,7 +41,7 @@ namespace myOwnWebServer
                                         //Thread theListen = new Thread(Listen);    // Listen is a method for listening
                                         //theListen.IsBackground = true;
                                         //theListen.Start(socketWatch);
-                while(true)
+                while(isRun)
                 {
                     Socket socketAgent = socketWatch.Accept();
                     Thread threadAgent = new Thread(Agent);
@@ -47,6 +49,10 @@ namespace myOwnWebServer
                     threadAgent.Start(socketAgent);
                 }
 
+                // Once receive the command to shutdown the server
+                Console.WriteLine("Receive order to shut down!");
+                Console.ReadKey();
+                return;
                 
 
             }
@@ -97,10 +103,18 @@ namespace myOwnWebServer
             int numOfReceive = socketAgent.Receive(byteBuffer);
             // Read Request and store it into strRequest
             string strRequest = Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
+            //===========================================================
+            //   check the content of the string
+            //if (shutdown command, then isRun=false,and will not display the message.
+            //   put some code here.
+            //============================================================
+            ServerRun(strRequest, socketAgent);
+
+
             Console.WriteLine(strRequest);
             socketAgent.Close();
             //Console.ReadKey();
-            //ServerRun(strRequest, socketAgent);
+            //
 
 
         }

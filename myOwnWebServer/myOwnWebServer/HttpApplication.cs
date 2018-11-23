@@ -26,7 +26,7 @@ namespace myOwnWebServer
         public void ProcessRequest(HttpContext context)
         {
             
-            string ext = Path.GetExtension(context.Request.RequestURL);
+            string ext = Path.GetExtension(context.RequestURL);
 
             switch (ext)
             {
@@ -52,7 +52,7 @@ namespace myOwnWebServer
         {
             ///IndexPage.aspx
             /// //mypage
-            string className = Path.GetFileNameWithoutExtension(context.Request.RequestURL);
+            string className = Path.GetFileNameWithoutExtension(context.RequestURL);
 
             string nameSpace = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Namespace;
             //HeimaIIS.IndexPage
@@ -76,9 +76,9 @@ namespace myOwnWebServer
         {
             string currentWebDir = AppDomain.CurrentDomain.BaseDirectory;
            
-            string fileName = Path.Combine(currentWebDir, context.Request.RequestURL.TrimStart('/'));
+            string fileName = Path.Combine(currentWebDir, context.RequestURL.TrimStart('/'));
 
-            context.Response.BodyData = File.ReadAllBytes(fileName);
+            context.BodyData = File.ReadAllBytes(fileName);
         }
     }
 }
