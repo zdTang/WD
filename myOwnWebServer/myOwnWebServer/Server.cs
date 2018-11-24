@@ -20,12 +20,14 @@ namespace myOwnWebServer
         public string Port { get; set; }
 
         public HttpContext context { get; set; }
+        public logger mylog { get; set; }
 
     public Server()
         {
             this.Path = ParseCommandLine.PathInput;
             this.IP = ParseCommandLine.IpInput;
             this.Port = ParseCommandLine.PortInput;
+            mylog = new logger(Path);
  
         }
 
@@ -46,7 +48,8 @@ namespace myOwnWebServer
                 while(isRun)
                 {
                     Socket socketAgent = socketWatch.Accept();
-                    Console.WriteLine("======find connection!========");
+                    //Console.WriteLine("======find connection!========");
+                    //mylog.log("find connection");
                     Thread threadAgent = new Thread(Agent);
                     threadAgent.IsBackground = true;
                     threadAgent.Start(socketAgent);
@@ -55,14 +58,17 @@ namespace myOwnWebServer
 
                 // Once receive the command to shutdown the server
                 Console.WriteLine("Receive order to shut down!");
+                //mylog.log("Receive order to shut down!");
                 Console.ReadKey();
                 return;
                 
 
             }
-            catch
+            catch (Exception e)
             {
                 Console.WriteLine("Create first Socket ERROR");
+                mylog.logError(e.Message);
+
             }
             
             
@@ -76,41 +82,52 @@ namespace myOwnWebServer
         /// <param name="o"></param>
         void Agent(object o)
         {
-            Console.WriteLine("==thread Agent start.==");
-            Socket socketAgent = o as Socket;
-            //HttpApplication httpApplication = new HttpApplication(socketAgent);
+            try
+            {
+                Console.WriteLine("==thread Agent start.==");
+                //Console.WriteLine("==thread Agent start.==");
+                //mylog.log("==thread Agent start.==");
+                Socket socketAgent = o as Socket;
+                //HttpApplication httpApplication = new HttpApplication(socketAgent);
 
 
-            byte[] byteBuffer = new byte[1024 * 1024];
+                byte[] byteBuffer = new byte[1024 * 1024];
 
-            int numOfReceive = socketAgent.Receive(byteBuffer);
-            // Read Request and store it into strRequest
-            string strRequest = Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
-            context = new HttpContext(strRequest);
-            context.HttpRequest();
-            context.HttpResponse();
-            Console.Clear();
-            Console.WriteLine("======Thread agent message=======");
-            Console.WriteLine(context.RequestURL);
-            Console.WriteLine(context.clientMethod);
-            //===========================================================
-            //   check the content of the string
-            //if (shutdown command, then isRun=false,and will not display the message.
-            //   put some code here.
-            //============================================================
-            //ServerRun(strRequest,socketAgent);
-            Thread ServerRun= new Thread(Run);
-            ServerRun.IsBackground = true;
-            ServerRun.Start(socketAgent);
-            //Console.WriteLine("======message 2=======");
-            //ServerRun(socketAgent);
-            Console.WriteLine("======THread Run go!=====");
-            Console.WriteLine(strRequest);
-            //Thread.Sleep(3000);
-            //socketAgent.Close();
-            //Console.ReadKey();
-            //
-            Console.WriteLine("===thread Agent Done.=====");
+                int numOfReceive = socketAgent.Receive(byteBuffer);
+                // Read Request and store it into strRequest
+                string strRequest = Encoding.ASCII.GetString(byteBuffer, 0, numOfReceive);
+                mylog.logRequest(strRequest);
+                context = new HttpContext(strRequest);
+                context.HttpRequest();
+                context.HttpResponse();
+                Console.Clear();
+                Console.WriteLine("======Thread agent message=======");
+                Console.WriteLine(context.RequestURL);
+                Console.WriteLine(context.clientMethod);
+                //===========================================================
+                //   check the content of the string
+                //if (shutdown command, then isRun=false,and will not display the message.
+                //   put some code here.
+                //============================================================
+                //ServerRun(strRequest,socketAgent);
+                Thread ServerRun = new Thread(Run);
+                ServerRun.IsBackground = true;
+                ServerRun.Start(socketAgent);
+                //Console.WriteLine("======message 2=======");
+                //ServerRun(socketAgent);
+                Console.WriteLine("======THread Run go!=====");
+                Console.WriteLine(strRequest);
+                //Thread.Sleep(3000);
+                //socketAgent.Close();
+                //Console.ReadKey();
+                //
+                Console.WriteLine("===thread Agent Done.=====");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Create first Socket ERROR");
+                mylog.logError(e.Message);
+            }
 
         }
 
@@ -124,12 +141,17 @@ namespace myOwnWebServer
             Console.WriteLine("==thread Run start.==");
             Socket socketAgent = o as Socket;
 
-            HttpApplication.ProcessRequest(context);
+            
 
             try
             {
+                HttpApplication.ProcessRequest(context);
+                Console.WriteLine("==Header Message.==");
+                Console.WriteLine(context.GetHeader());
                 socketAgent.Send(context.GetHeader());
-
+                mylog.logResponse(System.Text.Encoding.Default.GetString(context.GetHeader()));
+                Console.WriteLine("==Send header.==");
+                
                 if (context.BodyData != null)
                 {
                     socketAgent.Send(context.BodyData);
@@ -141,14 +163,17 @@ namespace myOwnWebServer
                     context.BodyData = new byte[0];
                     socketAgent.Send(context.BodyData);
                 }
+                socketAgent.Shutdown(SocketShutdown.Both);
+
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("expection!");
+                Console.WriteLine("Run thread expection");
+                mylog.logError(e.Message);
             }
 
 
-            socketAgent.Shutdown(SocketShutdown.Both);
+            
             //socket.Close();
             Console.WriteLine("socket final closed.");
             //Thread.Sleep(3000);

@@ -82,6 +82,8 @@ namespace myOwnWebServer
             {
                 responseStr.AppendFormat("Content-Length: 0\r\n\r\n");
             }
+            Console.WriteLine("==In THE header==");
+            Console.WriteLine(responseStr.ToString());
             return Encoding.ASCII.GetBytes(responseStr.ToString());
         }
 
@@ -90,27 +92,20 @@ namespace myOwnWebServer
             string type = "text/html";
             switch (ext)
             {
-                case ".aspx":
+               
                 case ".html":
                 case ".htm":
+                case ".txt":
                     type = "text/html";
                     break;
-                case ".png":
-                    type = "image/png";
-                    break;
-                case ".gif":
+                 case ".gif":
                     type = "image/gif";
                     break;
                 case ".jpg":
                 case ".jpeg":
                     type = "image/jpeg";
                     break;
-                case ".css":
-                    type = "text/css";
-                    break;
-                case ".js":
-                    type = "application/x-javascript";
-                    break;
+                
                 default:
                     type = "text/plain";
                     break;

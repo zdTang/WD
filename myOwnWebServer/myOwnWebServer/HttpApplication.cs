@@ -23,57 +23,31 @@ namespace myOwnWebServer
         //    }
 
         public static string fileName { set; get; }
-        public static void ProcessRequest(HttpContext context)
-        {
-            
-            string ext = Path.GetExtension(context.RequestURL);
-
-            switch (ext)
-            {
-                case ".jpg":
-                case ".jpeg":
-                case ".html":
-                case ".htm":
-                case ".css":
-                case ".js":
-                    ProcessStaticFile(context);
-                    break;
-                //case ".aspx":
-                //    ProcessDynamicFile(context);
-                //    break;
-                default:
-                    ProcessStaticFile(context);
-                    break;
-
-            }
-            
-        }
-
-        //public static  void ProcessDynamicFile(HttpContext context)
+        //public static void ProcessRequest(HttpContext context)
         //{
-        //    ///IndexPage.aspx
-        //    /// //mypage
-        //    string className = Path.GetFileNameWithoutExtension(context.RequestURL);
+            
+        //    string ext = Path.GetExtension(context.RequestURL);
 
-        //    string nameSpace = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Namespace;
-        //    //HeimaIIS.IndexPage
-        //    string fullName = nameSpace + "." + className;
-
-        //    IHttpHandler obj = (IHttpHandler)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(fullName, true);
-
-        //    if (obj == null)
+        //    switch (ext)
         //    {
-        //        //404 
-        //    }
-        //    else
-        //    {
-        //        obj.ProcessRequest(context);
-        //    }
+        //        case ".jpg":
+        //        case ".jpeg":
+        //        case ".html":
+        //        case ".htm":
+        //        case ".gif":
+        //            ProcessStaticFile(context);
+        //            break;
 
+        //        default:
+        //            ProcessStaticFile(context);
+        //            break;
 
+        //    }
+            
         //}
 
-        public static void ProcessStaticFile(HttpContext context)
+        
+        public static void ProcessRequest(HttpContext context)
         {
             //string currentWebDir = AppDomain.CurrentDomain.BaseDirectory;
             // Check if file exist so as to set up different status code
@@ -88,15 +62,15 @@ namespace myOwnWebServer
                 }
                 else
                 {
-                    context.BodyData = File.ReadAllBytes(fileName);
+                    context.BodyData = new byte[0];
                     context.ResponseStatus = "404 Not Found";
                 }
             }
             catch
             {
                 context.BodyData = new byte[0];
-                 
-                    context.ResponseStatus = "404 Not Found";
+
+                context.ResponseStatus = "500 Internal Server Error"; 
             }
            
            
