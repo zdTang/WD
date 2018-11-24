@@ -24,24 +24,11 @@ namespace myOwnWebServer
             {
                 Console.WriteLine("Please input the command as the following format.");
                 Console.WriteLine(@"myOwnWebServer –webRoot=C:\localWebSite –webIP=192.168.100.23 –webPort=5300");
-                //Console.WriteLine("ERROR 1");
-                //Console.WriteLine(Environment.GetCommandLineArgs().Length);
-
+ 
             }
-            //else if (!(ParseCommand(ref args[1]) && ParseCommand(ref args[2]) && ParseCommand(ref args[3])))
-            //{
-            //    ////string webRoot = args[0];
-            //    //Console.WriteLine("ERROR 2");
-            //    //Console.WriteLine(args[0]);
-            //    //Console.WriteLine(args[1]);
-            //    //Console.WriteLine(args[2]);
-            //    Console.WriteLine("The input of your format is not correct");
-            //    Console.WriteLine(@"myOwnWebServer –webRoot=C:\localWebSite –webIP=192.168.100.23 –webPort=5300");
-            //}
+            
             else// here means the command line is good, 
             {
-                /*     put code here     */
-                // need some Validation for PATH,IP,PORT
                 PathInput=args[1];
                 IpInput=args[2];
                 PortInput=args[3];

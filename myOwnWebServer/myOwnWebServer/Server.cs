@@ -41,10 +41,8 @@ namespace myOwnWebServer
                 IPEndPoint endPoint = new IPEndPoint(ipAddress, int.Parse(this.Port)); // Port to listen
                 Socket socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // Create a Socket
                 socketWatch.Bind(endPoint); // Socket bind a IP and Port
-                socketWatch.Listen(10);  //  only support one Client
-                                        //Thread theListen = new Thread(Listen);    // Listen is a method for listening
-                                        //theListen.IsBackground = true;
-                                        //theListen.Start(socketWatch);
+                socketWatch.Listen(1);  //  only support one Client
+                                        
                 while(isRun)
                 {
                     Socket socketAgent = socketWatch.Accept();
@@ -53,28 +51,21 @@ namespace myOwnWebServer
                     Thread threadAgent = new Thread(Agent);
                     threadAgent.IsBackground = true;
                     threadAgent.Start(socketAgent);
-                    Console.WriteLine("======Thread Agent go=======");
+                   
                 }
 
-                // Once receive the command to shutdown the server
-                Console.WriteLine("Receive order to shut down!");
-                //mylog.log("Receive order to shut down!");
-                Console.ReadKey();
-                return;
-                
-
+               
             }
             catch (Exception e)
             {
-                Console.WriteLine("Create first Socket ERROR");
+                
                 mylog.logError(e.Message);
 
             }
             
             
         }
-       
-        //}
+
 
         /// <summary>
         /// this Method deal with Client
@@ -84,13 +75,9 @@ namespace myOwnWebServer
         {
             try
             {
-                Console.WriteLine("==thread Agent start.==");
-                //Console.WriteLine("==thread Agent start.==");
-                //mylog.log("==thread Agent start.==");
+              
                 Socket socketAgent = o as Socket;
-                //HttpApplication httpApplication = new HttpApplication(socketAgent);
-
-
+               
                 byte[] byteBuffer = new byte[1024 * 1024];
 
                 int numOfReceive = socketAgent.Receive(byteBuffer);
@@ -100,32 +87,14 @@ namespace myOwnWebServer
                 context = new HttpContext(strRequest);
                 context.HttpRequest();
                 context.HttpResponse();
-                Console.Clear();
-                Console.WriteLine("======Thread agent message=======");
-                Console.WriteLine(context.RequestURL);
-                Console.WriteLine(context.clientMethod);
-                //===========================================================
-                //   check the content of the string
-                //if (shutdown command, then isRun=false,and will not display the message.
-                //   put some code here.
-                //============================================================
-                //ServerRun(strRequest,socketAgent);
+                
                 Thread ServerRun = new Thread(Run);
                 ServerRun.IsBackground = true;
                 ServerRun.Start(socketAgent);
-                //Console.WriteLine("======message 2=======");
-                //ServerRun(socketAgent);
-                Console.WriteLine("======THread Run go!=====");
-                Console.WriteLine(strRequest);
-                //Thread.Sleep(3000);
-                //socketAgent.Close();
-                //Console.ReadKey();
-                //
-                Console.WriteLine("===thread Agent Done.=====");
+                
             }
             catch(Exception e)
             {
-                Console.WriteLine("Create first Socket ERROR");
                 mylog.logError(e.Message);
             }
 
@@ -138,28 +107,22 @@ namespace myOwnWebServer
         //public void ServerRun(string strRequest, Socket socket)
        public void Run( object o)
         {
-            Console.WriteLine("==thread Run start.==");
-            Socket socketAgent = o as Socket;
+             Socket socketAgent = o as Socket;
 
             
 
             try
             {
                 HttpApplication.ProcessRequest(context);
-                Console.WriteLine("==Header Message.==");
-                Console.WriteLine(context.GetHeader());
                 socketAgent.Send(context.GetHeader());
                 mylog.logResponse(System.Text.Encoding.Default.GetString(context.GetHeader()));
-                Console.WriteLine("==Send header.==");
                 
                 if (context.BodyData != null)
                 {
                     socketAgent.Send(context.BodyData);
-                    Console.WriteLine("sent message done. has message");
                 }
                 else
                 {
-                    Console.WriteLine("body is null!");
                     context.BodyData = new byte[0];
                     socketAgent.Send(context.BodyData);
                 }
@@ -169,17 +132,9 @@ namespace myOwnWebServer
             }
             catch (Exception e)
             {
-                Console.WriteLine("Run thread expection");
                 mylog.logError(e.Message);
             }
 
-
-            
-            //socket.Close();
-            Console.WriteLine("socket final closed.\r\n");
-            //Thread.Sleep(3000);
-            //Console.Clear();
-            Console.WriteLine("===thread Run Done.===");
         }
 
 

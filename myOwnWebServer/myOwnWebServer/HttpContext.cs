@@ -12,14 +12,8 @@ namespace myOwnWebServer
 {     
     public class HttpContext
     {
-        //public HttpRequest Request { get; set; }// a instance of HttpRequest
-        //public HttpResponse Response { get; set; } // a instance of Response
-
-       
-
-
-
-        public string clientMethod { get; set; }
+  
+        //public string clientMethod { get; set; }
         public string RequestURL { get; set; }
 
         private string requestFileExt;   // The extension of required file
@@ -46,13 +40,23 @@ namespace myOwnWebServer
         /// <param name="strRequest"></param>
         public void HttpRequest()
         {
-            if (!string.IsNullOrEmpty(strRequest))
+            try
             {
-                string temp = strRequest.Replace("\r\n", "\r");
-                string[] lines = temp.Split('\r');
-                this.clientMethod = lines[0].Split(' ')[0];   // get Client's method
-                this.RequestURL = lines[0].Split(' ')[1];     // get URL from the request
+                if (!string.IsNullOrEmpty(strRequest))
+                {
+                    string temp = strRequest.Replace("\r\n", "\r");
+                    string[] lines = temp.Split('\r');
+                    //this.clientMethod = lines[0].Split(' ')[0];   // get Client's method
+                    this.RequestURL = lines[0].Split(' ')[1];     // get URL from the request
+                }
             }
+            catch (Exception e)
+            {
+
+                Program.myServer.mylog.logError(e.Message);
+
+            }
+
         }
 
          /// <summary>
@@ -70,20 +74,29 @@ namespace myOwnWebServer
         public byte[] GetHeader()
         {
             StringBuilder responseStr = new StringBuilder();
+            try
+            {
+                
 
-            // THE Response should change according to the different status
-            responseStr.AppendFormat("HTTP/1.1 {0}\r\n", ResponseStatus);//"200 OK"
-            responseStr.AppendFormat("Content=Type: {0}\r\n", GetContentType(requestFileExt));
-            if(BodyData!=null)
-            {
-                responseStr.AppendFormat("Content-Length: {0}\r\n\r\n", BodyData.Length);
+                // THE Response should change according to the different status
+                responseStr.AppendFormat("HTTP/1.1 {0}\r\n", ResponseStatus);//"200 OK"
+                responseStr.AppendFormat("Content=Type: {0}\r\n", GetContentType(requestFileExt));
+                if (BodyData != null)
+                {
+                    responseStr.AppendFormat("Content-Length: {0}\r\n\r\n", BodyData.Length);
+                }
+                else
+                {
+                    responseStr.AppendFormat("Content-Length: 0\r\n\r\n");
+                }
+                
             }
-            else
+            catch (Exception e)
             {
-                responseStr.AppendFormat("Content-Length: 0\r\n\r\n");
+
+                Program.myServer.mylog.logError(e.Message);
+
             }
-            Console.WriteLine("==In THE header==");
-            Console.WriteLine(responseStr.ToString());
             return Encoding.ASCII.GetBytes(responseStr.ToString());
         }
 

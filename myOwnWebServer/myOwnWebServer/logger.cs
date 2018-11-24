@@ -31,13 +31,10 @@ namespace myOwnWebServer
             log.Append(CurrentTime);
             log.Append("]>>Error");
             log.Append("====\r\n");
-            // String timeStamp = GetTimestamp(DateTime.Now);
-            //content = CurrentTime + "\n\r" + content;
             log.Append(content);
             totalContent = log.ToString();
 
             sw = File.AppendText(logFileName);
-            //sw = new StreamWriter(logFileName);
             sw.WriteLine(totalContent);
             sw.Flush();
             sw.Close();
@@ -53,13 +50,10 @@ namespace myOwnWebServer
             logRequest.Append(CurrentTime);
             logRequest.Append("]>>Request Header");
             logRequest.Append("====\r\n");
-            // String timeStamp = GetTimestamp(DateTime.Now);
-            //content = CurrentTime + "\n\r" + content;
             logRequest.Append(content);
             totalContent = logRequest.ToString();
             
             sw = File.AppendText(logFileName);
-            //sw = new StreamWriter(logFileName);
             sw.WriteLine(totalContent);
             sw.Flush();
             sw.Close();
@@ -76,13 +70,10 @@ namespace myOwnWebServer
             logResponse.Append(CurrentTime);
             logResponse.Append("]>>Respond Header");
             logResponse.Append("====\r\n");
-            // String timeStamp = GetTimestamp(DateTime.Now);
-            //content = CurrentTime + "\n\r" + content;
             logResponse.Append(content);
             totalContent = logResponse.ToString();
 
             sw = File.AppendText(logFileName);
-            //sw = new StreamWriter(logFileName);
             sw.WriteLine(totalContent);
             sw.Flush();
             sw.Close();
@@ -98,14 +89,9 @@ namespace myOwnWebServer
             log.Append("====[");
             log.Append(CurrentTime);
             log.Append("]>>Event:");
-            //log.Append("====\r\n");
-            // String timeStamp = GetTimestamp(DateTime.Now);
-            //content = CurrentTime + "\n\r" + content;
             log.Append(content);
             totalContent = log.ToString();
-
             sw = File.AppendText(logFileName);
-            //sw = new StreamWriter(logFileName);
             sw.WriteLine(totalContent);
             sw.Flush();
             sw.Close();

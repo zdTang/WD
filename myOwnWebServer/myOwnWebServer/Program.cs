@@ -16,26 +16,9 @@ namespace myOwnWebServer
             {
                 myServer = new Server();
                 myServer.ServerStart();
-
-                //Console.WriteLine(myServer.Path);
-                //Console.WriteLine(myServer.IP);
-                //Console.WriteLine(myServer.Port);
-                myServer.mylog.logEvent("Server is closed!");
-                //Console.WriteLine("PUT CODE HERE");
-                Console.ReadKey();
             }
-            else
-            {
-                Console.WriteLine("NOT OK");
-                Console.WriteLine("GONNA QUIT");
-                Console.ReadKey();
-            }
-
+ 
         }
-
-
-        
-
 
     }
 }

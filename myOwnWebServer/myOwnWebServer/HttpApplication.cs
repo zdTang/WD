@@ -13,44 +13,13 @@ namespace myOwnWebServer
     /// </summary>
     public static class HttpApplication
     {
-        /// <summary>
-        /// D
-        /// </summary>
-        /// <param name="socketAgent"></param>
-        //public  HttpApplication(Socket socketAgent)
-        //    {
-
-        //    }
+        
 
         public static string fileName { set; get; }
-        //public static void ProcessRequest(HttpContext context)
-        //{
-            
-        //    string ext = Path.GetExtension(context.RequestURL);
-
-        //    switch (ext)
-        //    {
-        //        case ".jpg":
-        //        case ".jpeg":
-        //        case ".html":
-        //        case ".htm":
-        //        case ".gif":
-        //            ProcessStaticFile(context);
-        //            break;
-
-        //        default:
-        //            ProcessStaticFile(context);
-        //            break;
-
-        //    }
-            
-        //}
-
+       
         
         public static void ProcessRequest(HttpContext context)
         {
-            //string currentWebDir = AppDomain.CurrentDomain.BaseDirectory;
-            // Check if file exist so as to set up different status code
             
             try
             {
@@ -66,14 +35,12 @@ namespace myOwnWebServer
                     context.ResponseStatus = "404 Not Found";
                 }
             }
-            catch
+            catch (Exception e)
             {
                 context.BodyData = new byte[0];
-
-                context.ResponseStatus = "500 Internal Server Error"; 
+                context.ResponseStatus = "500 Internal Server Error";
+                Program.myServer.mylog.logError(e.Message);
             }
-           
-           
         }
     }
 }
