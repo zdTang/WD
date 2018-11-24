@@ -26,15 +26,17 @@ namespace myOwnWebServer
         public byte[] BodyData { get; set; }
         public string ResponseStatus { get; set; }  // The status Code and explanation 
 
+        public string strRequest { get; set; }  // The request string
+
 
         ///// <summary>
         ///// constructor of HttpContext
         ///// </summary>
         ///// <param name="strRequest"></param>
-        public HttpContext(string strRequest)
+        public HttpContext(string Request)
         {
-            HttpRequest(strRequest);
-            HttpResponse(this.RequestURL);
+            this.strRequest = Request;
+           
         }
         // Check if the "METHOD" is necessarily needed
 
@@ -42,7 +44,7 @@ namespace myOwnWebServer
         /// Parse the request string and get the URL and Method
         /// </summary>
         /// <param name="strRequest"></param>
-        public void HttpRequest(string strRequest)
+        public void HttpRequest()
         {
             if (!string.IsNullOrEmpty(strRequest))
             {
@@ -57,7 +59,7 @@ namespace myOwnWebServer
          /// Find the format of the requested file from parsing the URL
          /// </summary>
          /// <param name="RequestURL"></param>
-        public void HttpResponse(string RequestURL)
+        public void HttpResponse()
         {
             requestFileExt = System.IO.Path.GetExtension(RequestURL);
         }
@@ -72,7 +74,14 @@ namespace myOwnWebServer
             // THE Response should change according to the different status
             responseStr.AppendFormat("HTTP/1.1 {0}\r\n", ResponseStatus);//"200 OK"
             responseStr.AppendFormat("Content=Type: {0}\r\n", GetContentType(requestFileExt));
-            responseStr.AppendFormat("Content-Length: {0}\r\n\r\n", BodyData.Length);
+            if(BodyData!=null)
+            {
+                responseStr.AppendFormat("Content-Length: {0}\r\n\r\n", BodyData.Length);
+            }
+            else
+            {
+                responseStr.AppendFormat("Content-Length: 0\r\n\r\n");
+            }
             return Encoding.ASCII.GetBytes(responseStr.ToString());
         }
 

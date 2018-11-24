@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace myOwnWebServer
 {
-    class Program
+    public class Program
     {
+        public static Server myServer;
         static void Main(string[] args)
         {
             
             if(ParseCommandLine.CheckCommandLine())
             {
-                Server myServer = new Server();
+                myServer = new Server();
                 myServer.ServerStart();
 
                 Console.WriteLine(myServer.Path);

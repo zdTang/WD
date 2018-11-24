@@ -11,7 +11,7 @@ namespace myOwnWebServer
     /// <summary>
     /// 
     /// </summary>
-    class HttpApplication
+    public static class HttpApplication
     {
         /// <summary>
         /// D
@@ -22,8 +22,8 @@ namespace myOwnWebServer
 
         //    }
 
-
-        public void ProcessRequest(HttpContext context)
+        public static string fileName { set; get; }
+        public static void ProcessRequest(HttpContext context)
         {
             
             string ext = Path.GetExtension(context.RequestURL);
@@ -36,10 +36,11 @@ namespace myOwnWebServer
                 case ".htm":
                 case ".css":
                 case ".js":
-                    ProcessStaticFile(context); break;
-                case ".aspx":
-                    ProcessDynamicFile(context);
+                    ProcessStaticFile(context);
                     break;
+                //case ".aspx":
+                //    ProcessDynamicFile(context);
+                //    break;
                 default:
                     ProcessStaticFile(context);
                     break;
@@ -48,37 +49,57 @@ namespace myOwnWebServer
             
         }
 
-        private void ProcessDynamicFile(HttpContext context)
+        //public static  void ProcessDynamicFile(HttpContext context)
+        //{
+        //    ///IndexPage.aspx
+        //    /// //mypage
+        //    string className = Path.GetFileNameWithoutExtension(context.RequestURL);
+
+        //    string nameSpace = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Namespace;
+        //    //HeimaIIS.IndexPage
+        //    string fullName = nameSpace + "." + className;
+
+        //    IHttpHandler obj = (IHttpHandler)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(fullName, true);
+
+        //    if (obj == null)
+        //    {
+        //        //404 
+        //    }
+        //    else
+        //    {
+        //        obj.ProcessRequest(context);
+        //    }
+
+
+        //}
+
+        public static void ProcessStaticFile(HttpContext context)
         {
-            ///IndexPage.aspx
-            /// //mypage
-            string className = Path.GetFileNameWithoutExtension(context.RequestURL);
-
-            string nameSpace = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Namespace;
-            //HeimaIIS.IndexPage
-            string fullName = nameSpace + "." + className;
-
-            IHttpHandler obj = (IHttpHandler)System.Reflection.Assembly.GetExecutingAssembly().CreateInstance(fullName, true);
-
-            if (obj == null)
+            //string currentWebDir = AppDomain.CurrentDomain.BaseDirectory;
+            // Check if file exist so as to set up different status code
+            
+            try
             {
-                //404 
+                fileName = Path.Combine(Program.myServer.Path, context.RequestURL.TrimStart('/'));
+                if (File.Exists(fileName))
+                {
+                    context.BodyData = File.ReadAllBytes(fileName);
+                    context.ResponseStatus = "200 OK";
+                }
+                else
+                {
+                    context.BodyData = File.ReadAllBytes(fileName);
+                    context.ResponseStatus = "404 Not Found";
+                }
             }
-            else
+            catch
             {
-                obj.ProcessRequest(context);
+                context.BodyData = new byte[0];
+                 
+                    context.ResponseStatus = "404 Not Found";
             }
-
-
-        }
-
-        public void ProcessStaticFile(HttpContext context)
-        {
-            string currentWebDir = AppDomain.CurrentDomain.BaseDirectory;
            
-            string fileName = Path.Combine(currentWebDir, context.RequestURL.TrimStart('/'));
-
-            context.BodyData = File.ReadAllBytes(fileName);
+           
         }
     }
 }

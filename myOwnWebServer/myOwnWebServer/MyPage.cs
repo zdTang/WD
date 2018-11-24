@@ -12,7 +12,7 @@ namespace myOwnWebServer
         {
             string strBody = @"<html><head></head><body><h2> big shit y</h2></body></html>";
 
-            context.Response.BodyData = Encoding.UTF8.GetBytes(strBody);
+            context.BodyData = Encoding.UTF8.GetBytes(strBody);
         }
     }
 }
