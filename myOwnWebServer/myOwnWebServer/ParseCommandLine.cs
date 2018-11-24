@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace myOwnWebServer
 {
-    public class ParseCommandLine
+    /// \brief The class is to used for methods and properties for parsing the command line
+    /// \details <b>Details</b>
+    /// This class contains methods and properties for parsing the command line, so as to find the IP, PORT, Path 
+
+    public class CommandLine
     {
-        public static string IpInput = string.Empty;
-        public static string PathInput = string.Empty;
-        public static string PortInput = string.Empty;
+        public static string IpInput = string.Empty;  // IP address
+        public static string PathInput = string.Empty; // Path of the Website Folder
+        public static string PortInput = string.Empty; // Port
 
-
+        /// \brief The method to initiate the IP,Path,Port once the command line is legal 
+        /// \details <b>Details</b>
+        /// This method will get the IP,PORT,Path of the Website from the command line.
+        /// \return  a boolean value to indicate if the command line is legal.
         public static bool CheckCommandLine()
         {
             
@@ -40,10 +47,15 @@ namespace myOwnWebServer
 
         }
 
+        /// \brief The method to parse the command
+        /// \details <b>Details</b>
+        /// This method will find the IP,PORT,Path of the Website from the command line.
+        /// \return  a boolean value to indicate if the command line is legal.
+        
         static bool ParseCommand(ref string userInput)
         {
             bool isInputOK = true;
-            int index = userInput.IndexOf("=", 0);
+            int index = userInput.IndexOf("=", 0);  // using the "=" as delimiter 
             if (index == -1) //  not "=" been found in the argument
             {
                 isInputOK = false;

@@ -7,11 +7,21 @@ using System.Threading.Tasks;
 
 namespace myOwnWebServer
 {
-    public class logger
+    /// \brief The class is to log the event of the Server
+    /// \details <b>Details</b>
+    /// This class  comprises several methods for logging
+    public class Logger
     {
-        string logFileName;
-        StreamWriter sw;
-        public logger(string path)
+        string logFileName; //   The path for log file
+        StreamWriter sw;    //   A instance of StreamWriter
+
+
+        /// \brief The Constructor of the class Logger
+        /// \details <b>Details</b>
+        /// This method will instantiate a Logger object
+        
+
+        public Logger(string path)
             {
             logFileName = Path.Combine(path, "Mylog.txt");
 
@@ -21,7 +31,12 @@ namespace myOwnWebServer
             
         }
 
-        public void logError(string content)
+        /// \brief The method is to log error information
+        /// \details <b>Details</b>
+        /// This method  is to log error information during the running of the Server
+        /// \para  Error information
+        /// \return  void
+        public void Logerror(string content)
         {
             DateTime dt = DateTime.Now;
             string CurrentTime = dt.ToString("yyyy-MM-dd HH:mm:ss");
@@ -38,9 +53,14 @@ namespace myOwnWebServer
             sw.WriteLine(totalContent);
             sw.Flush();
             sw.Close();
-
         }
-        public void logRequest(string content)
+
+        /// \brief The method is to log Request Header
+        /// \details <b>Details</b>
+        /// This method  is to log Request Header during the running of the Server
+        /// \para  The Header of the Request
+        /// \return  void
+        public void LogRequest(string content)
         {
             DateTime dt = DateTime.Now;
             string CurrentTime = dt.ToString("yyyy-MM-dd HH:mm:ss");
@@ -59,8 +79,12 @@ namespace myOwnWebServer
             sw.Close();
 
         }
-
-        public void logResponse(string content)
+        /// \brief The method is to log Response Header
+        /// \details <b>Details</b>
+        /// This method  is to log Response Header during the running of the Server
+        /// \para  The Header of the Response
+        /// \return  void
+        public void LogResponse(string content)
         {
             DateTime dt = DateTime.Now;
             string CurrentTime = dt.ToString("yyyy-MM-dd HH:mm:ss");
@@ -80,7 +104,12 @@ namespace myOwnWebServer
 
         }
 
-        public void logEvent(string content)
+        /// \brief The method is to log usual Event
+        /// \details <b>Details</b>
+        /// This method  is to log usual event during the running of the Server
+        /// \para  The Header of the Response
+        /// \return  void
+        public void LogEvent(string content)
         {
             DateTime dt = DateTime.Now;
             string CurrentTime = dt.ToString("yyyy-MM-dd HH:mm:ss");

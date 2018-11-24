@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpApplication.cs" />
     <Compile Include="HttpContext.cs" />
     <Compile Include="logger.cs" />
     <Compile Include="ParseCommandLine.cs" />
