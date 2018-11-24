@@ -48,8 +48,8 @@ namespace myOwnWebServer
                 while(isRun)
                 {
                     Socket socketAgent = socketWatch.Accept();
-                    //Console.WriteLine("======find connection!========");
-                    //mylog.log("find connection");
+                    
+                    mylog.logEvent("Accept connection!");
                     Thread threadAgent = new Thread(Agent);
                     threadAgent.IsBackground = true;
                     threadAgent.Start(socketAgent);
@@ -164,6 +164,7 @@ namespace myOwnWebServer
                     socketAgent.Send(context.BodyData);
                 }
                 socketAgent.Shutdown(SocketShutdown.Both);
+                mylog.logEvent("Connection is Closed!");
 
             }
             catch (Exception e)
@@ -175,7 +176,7 @@ namespace myOwnWebServer
 
             
             //socket.Close();
-            Console.WriteLine("socket final closed.");
+            Console.WriteLine("socket final closed.\r\n");
             //Thread.Sleep(3000);
             //Console.Clear();
             Console.WriteLine("===thread Run Done.===");

@@ -13,7 +13,7 @@ namespace myOwnWebServer
         StreamWriter sw;
         public logger(string path)
             {
-            logFileName = Path.Combine(path, "log2.txt");
+            logFileName = Path.Combine(path, "Mylog.txt");
 
             if (!File.Exists(logFileName))
                 File.Create(@logFileName).Close();
@@ -80,6 +80,29 @@ namespace myOwnWebServer
             //content = CurrentTime + "\n\r" + content;
             logResponse.Append(content);
             totalContent = logResponse.ToString();
+
+            sw = File.AppendText(logFileName);
+            //sw = new StreamWriter(logFileName);
+            sw.WriteLine(totalContent);
+            sw.Flush();
+            sw.Close();
+
+        }
+
+        public void logEvent(string content)
+        {
+            DateTime dt = DateTime.Now;
+            string CurrentTime = dt.ToString("yyyy-MM-dd HH:mm:ss");
+            StringBuilder log = new StringBuilder();
+            string totalContent;
+            log.Append("====[");
+            log.Append(CurrentTime);
+            log.Append("]>>Event:");
+            //log.Append("====\r\n");
+            // String timeStamp = GetTimestamp(DateTime.Now);
+            //content = CurrentTime + "\n\r" + content;
+            log.Append(content);
+            totalContent = log.ToString();
 
             sw = File.AppendText(logFileName);
             //sw = new StreamWriter(logFileName);
